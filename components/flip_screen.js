@@ -13,6 +13,9 @@ export default function (props, ref, key) {
             ref={ref}
             key={key}
             id="flip"
+            emitOnComplete={{
+                name: 'flip',
+            }}
         >
             <skoash.Audio
                 type="voiceOver"

@@ -66,7 +66,7 @@ export default function (props, ref, key, opts = {}) {
 
     getGameSrc = function () {
         if (!_.get(props, 'data.game.screenStart')) return;
-        return `../waste-busters-phaser/index.html?v=${opts.level}`;
+        return `../waste-busters-runner/index.html?v=${opts.level}`;
     };
 
     onOpenReveal = function () {
