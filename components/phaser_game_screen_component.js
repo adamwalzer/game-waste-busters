@@ -4,10 +4,10 @@ export default function (props, ref, key, opts = {}) {
     var startScreen;
     var onScreenStart;
     var onScreenStop;
-    var getGameSrc;
+    // var getGameSrc;
     var onOpenReveal;
     var onCloseReveal;
-    var onRespond;
+    // var onRespond;
     var onTimerComplete;
 
     startScreen = function (screenStart = true, callback) {
@@ -65,10 +65,10 @@ export default function (props, ref, key, opts = {}) {
         });
     };
 
-    getGameSrc = function () {
-        if (!_.get(props, 'data.game.screenStart')) return;
-        return `../waste-busters-runner/index.html?v=${opts.level}`;
-    };
+    // getGameSrc = function () {
+    //     if (!_.get(props, 'data.game.screenStart')) return;
+    //     return `../waste-busters-runner/index.html?v=${opts.level}`;
+    // };
 
     onOpenReveal = function () {
         setTimeout(() => {
@@ -113,61 +113,61 @@ export default function (props, ref, key, opts = {}) {
         }
     };
 
-    onRespond = function (options) {
-        var trucks = _.get(props, `gameState.data.game.levels.${opts.level}.trucks`);
-        var complete = _.get(props, `gameState.data.game.levels.${opts.level}.complete`);
+    // onRespond = function (options) {
+    //     var trucks = _.get(props, `gameState.data.game.levels.${opts.level}.trucks`);
+    //     var complete = _.get(props, `gameState.data.game.levels.${opts.level}.complete`);
 
-        if (_.get(options, 'updateGameState.data.game.lives') === 0) {
-            startScreen.call(this, false);
+    //     if (_.get(options, 'updateGameState.data.game.lives') === 0) {
+    //         startScreen.call(this, false);
 
-            this.updateGameState({
-                path: ['game'],
-                data: {
-                    bagCount: 0,
-                    lives: 1,
-                    levels: {
-                        [opts.level]: {
-                            start: false,
-                        }
-                    }
-                },
-            });
+    //         this.updateGameState({
+    //             path: ['game'],
+    //             data: {
+    //                 bagCount: 0,
+    //                 lives: 1,
+    //                 levels: {
+    //                     [opts.level]: {
+    //                         start: false,
+    //                     }
+    //                 }
+    //             },
+    //         });
 
-            setTimeout(() => {
-                startScreen.call(this);
-            }, 0);
-        }
+    //         setTimeout(() => {
+    //             startScreen.call(this);
+    //         }, 0);
+    //     }
 
-        if (_.get(options, `updateGameState.data.game.levels.${opts.level}.start`) &&
-            _.get(props, 'data.reveal.open', false)) {
-            this.updateGameState({
-                path: 'd-pad',
-                data: {
-                    pause: true
-                },
-            });
-        }
+    //     if (_.get(options, `updateGameState.data.game.levels.${opts.level}.start`) &&
+    //         _.get(props, 'data.reveal.open', false)) {
+    //         this.updateGameState({
+    //             path: 'd-pad',
+    //             data: {
+    //                 pause: true
+    //             },
+    //         });
+    //     }
 
-        if (complete && _.get(props, 'data.reveal.wasOpened') !== 'complete') {
-            this.updateGameState({
-                path: 'reveal',
-                data: {
-                    open: 'complete',
-                    wasOpened: 'complete',
-                }
-            });
-        }
+    //     if (complete && _.get(props, 'data.reveal.wasOpened') !== 'complete') {
+    //         this.updateGameState({
+    //             path: 'reveal',
+    //             data: {
+    //                 open: 'complete',
+    //                 wasOpened: 'complete',
+    //             }
+    //         });
+    //     }
 
-        if (!complete && trucks && _.get(props, 'data.reveal.wasOpened') !== 'fact-' + trucks) {
-            this.updateGameState({
-                path: 'reveal',
-                data: {
-                    open: 'fact-' + trucks,
-                    wasOpened: 'fact-' + trucks,
-                }
-            });
-        }
-    };
+    //     if (!complete && trucks && _.get(props, 'data.reveal.wasOpened') !== 'fact-' + trucks) {
+    //         this.updateGameState({
+    //             path: 'reveal',
+    //             data: {
+    //                 open: 'fact-' + trucks,
+    //                 wasOpened: 'fact-' + trucks,
+    //             }
+    //         });
+    //     }
+    // };
 
     onTimerComplete = function () {
         if (_.get(props, `gameState.data.game.levels.${opts.level}.complete`, false)) return;
