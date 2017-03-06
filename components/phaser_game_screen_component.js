@@ -21,7 +21,8 @@ export default function (props, ref, key, opts = {}) {
     };
 
     onScreenStart = function () {
-        var gameData = _.get(props, 'gameState.data.game');
+        var gameData = _.get(props, 'gameState.data.game', {});
+        gameData.state = opts.level;
 
         startScreen.call(this);
 
@@ -198,13 +199,13 @@ export default function (props, ref, key, opts = {}) {
             onStart={onScreenStart}
             onStop={onScreenStop}
         >
-            <skoash.GameEmbedder
+            {/*<skoash.GameEmbedder
                 src={getGameSrc()}
                 controller={_.get(props, 'data.d-pad')}
                 complete={_.get(props, `gameState.data.game.levels.${opts.level}.complete`, false)}
                 data={_.get(props, 'gameState.data.game', {})}
                 onRespond={onRespond}
-            />
+            />*/}
             <skoash.Timer
                 countDown
                 timeout={120000}

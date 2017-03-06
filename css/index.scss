@@ -3,6 +3,7 @@
 
 @include reset;
 @include bootstrap-game(McLaren);
+@include game-embedder;
 
 html {
     color: $text-color;
