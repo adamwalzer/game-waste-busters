@@ -31,6 +31,68 @@ import FlipScreen from './components/flip_screen';
 
 import QuitScreen from 'shared/components/quit_screen/0.1';
 
+let onRespond = function (options) {
+    let level = _.get(this, 'props.gameState.data.game.state', 1);
+    let levelData = _.get(this, `props.gameState.data.game.levels.${level}`, {});
+    let trucks = levelData.trucks;
+    let complete = levelData.complete;
+    let start = _.get(options, `updateGameState.data.game.levels.${level}.start`);
+    let screenData = _.get(this, `props.gameState.data.screens.${this.props.gameState.currentScreenIndex}`);
+    let wasOpened = _.get(screenData, 'reveal.wasOpened');
+    let open = _.get(screenData, 'reveal.open', false);
+
+    if (_.get(options, 'updateGameState.data.game.lives') === 0) {
+        this.updateGameData({
+            key: 'game',
+            data: {
+                screenStart: false,
+                bagCount: 0,
+                lives: 1,
+                levels: {
+                    [level]: {
+                        start: false,
+                    }
+                },
+                state: null,
+            },
+        });
+
+        this.updateScreenData({
+            keys: ['reveal', 'open'],
+            data: 'replay',
+        });
+    }
+
+    if (start && open) {
+        this.updateGameState({
+            path: 'd-pad',
+            data: {
+                pause: true
+            },
+        });
+    }
+
+    if (complete && wasOpened !== 'complete') {
+        this.updateGameState({
+            path: 'reveal',
+            data: {
+                open: 'complete',
+                wasOpened: 'complete',
+            }
+        });
+    }
+
+    if (!complete && trucks && wasOpened !== 'fact-' + trucks) {
+        this.updateScreenData({
+            key: 'reveal',
+            data: {
+                open: 'fact-' + trucks,
+                wasOpened: 'fact-' + trucks,
+            }
+        });
+    }
+};
+
 skoash.start(
     <skoash.Game
         config={config}
@@ -202,19 +264,16 @@ skoash.start(
             );
         }}
         renderExtras={function () {
-            let index = this.state.currentScreenIndex;
-            let props = {
-                data: _.get(this, `state.data.screens.${index}`),
-            };
-
             return (
                 <skoash.GameEmbedder
                     ref="gameEmbedder"
-                    controller={_.get(props, 'data.d-pad')}
+                    controller={_.get(this, `state.data.screens.${this.state.currentScreenIndex}.d-pad`)}
                     src={'../waste-busters-runner/index.html'}
                     complete={_.get(this, 'state.data.game.levels.1.complete', false)}
                     data={_.get(this, 'state.data.game', {})}
                     state={_.get(this, 'state.data.game.state', '')}
+                    gameState={this.state}
+                    onRespond={onRespond}
                 />
             );
         }}

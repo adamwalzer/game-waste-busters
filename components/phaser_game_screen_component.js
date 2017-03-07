@@ -4,27 +4,12 @@ export default function (props, ref, key, opts = {}) {
     var startScreen;
     var onScreenStart;
     var onScreenStop;
-    // var getGameSrc;
     var onOpenReveal;
     var onCloseReveal;
-    // var onRespond;
     var onTimerComplete;
 
     startScreen = function (screenStart = true, callback) {
-        this.updateGameState({
-            path: 'game',
-            data: {
-                screenStart,
-            },
-            callback,
-        });
-    };
-
-    onScreenStart = function () {
-        var gameData = _.get(props, 'gameState.data.game', {});
-        gameData.state = opts.level;
-
-        startScreen.call(this);
+        let gameData = _.get(props, 'gameState.data.game', {});
 
         if (_.get(gameData, `levels.${opts.level}.complete`, false)) {
             _.assign(gameData, {
@@ -36,15 +21,23 @@ export default function (props, ref, key, opts = {}) {
             });
         }
 
-        this.updateGameState({
-            path: ['game'],
-            data: _.defaults(gameData, {
+        this.updateGameData({
+            key: 'game',
+            data: _.defaults({
+                screenStart,
+                state: opts.level,
+            }, gameData, {
                 hits: 0,
                 bagCount: 0,
                 score: 0,
                 lives: 1,
             }),
+            callback,
         });
+    };
+
+    onScreenStart = function () {
+        startScreen.call(this);
     };
 
     onScreenStop = function () {
@@ -57,18 +50,14 @@ export default function (props, ref, key, opts = {}) {
                         [opts.level]: {
                             start: false,
                         }
-                    }
+                    },
+                    state: 'default',
                 },
             });
 
             startScreen.call(this);
         });
     };
-
-    // getGameSrc = function () {
-    //     if (!_.get(props, 'data.game.screenStart')) return;
-    //     return `../waste-busters-runner/index.html?v=${opts.level}`;
-    // };
 
     onOpenReveal = function () {
         setTimeout(() => {
@@ -110,64 +99,10 @@ export default function (props, ref, key, opts = {}) {
 
         if (prevMessage === 'complete') {
             skoash.Screen.prototype.goto(parseInt(key, 10) + 1);
+        } else if (prevMessage === 'replay') {
+            startScreen.call(this);
         }
     };
-
-    // onRespond = function (options) {
-    //     var trucks = _.get(props, `gameState.data.game.levels.${opts.level}.trucks`);
-    //     var complete = _.get(props, `gameState.data.game.levels.${opts.level}.complete`);
-
-    //     if (_.get(options, 'updateGameState.data.game.lives') === 0) {
-    //         startScreen.call(this, false);
-
-    //         this.updateGameState({
-    //             path: ['game'],
-    //             data: {
-    //                 bagCount: 0,
-    //                 lives: 1,
-    //                 levels: {
-    //                     [opts.level]: {
-    //                         start: false,
-    //                     }
-    //                 }
-    //             },
-    //         });
-
-    //         setTimeout(() => {
-    //             startScreen.call(this);
-    //         }, 0);
-    //     }
-
-    //     if (_.get(options, `updateGameState.data.game.levels.${opts.level}.start`) &&
-    //         _.get(props, 'data.reveal.open', false)) {
-    //         this.updateGameState({
-    //             path: 'd-pad',
-    //             data: {
-    //                 pause: true
-    //             },
-    //         });
-    //     }
-
-    //     if (complete && _.get(props, 'data.reveal.wasOpened') !== 'complete') {
-    //         this.updateGameState({
-    //             path: 'reveal',
-    //             data: {
-    //                 open: 'complete',
-    //                 wasOpened: 'complete',
-    //             }
-    //         });
-    //     }
-
-    //     if (!complete && trucks && _.get(props, 'data.reveal.wasOpened') !== 'fact-' + trucks) {
-    //         this.updateGameState({
-    //             path: 'reveal',
-    //             data: {
-    //                 open: 'fact-' + trucks,
-    //                 wasOpened: 'fact-' + trucks,
-    //             }
-    //         });
-    //     }
-    // };
 
     onTimerComplete = function () {
         if (_.get(props, `gameState.data.game.levels.${opts.level}.complete`, false)) return;
@@ -199,13 +134,6 @@ export default function (props, ref, key, opts = {}) {
             onStart={onScreenStart}
             onStop={onScreenStop}
         >
-            {/*<skoash.GameEmbedder
-                src={getGameSrc()}
-                controller={_.get(props, 'data.d-pad')}
-                complete={_.get(props, `gameState.data.game.levels.${opts.level}.complete`, false)}
-                data={_.get(props, 'gameState.data.game', {})}
-                onRespond={onRespond}
-            />*/}
             <skoash.Timer
                 countDown
                 timeout={120000}
