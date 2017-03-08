@@ -41,21 +41,17 @@ export default function (props, ref, key, opts = {}) {
     };
 
     onScreenStop = function () {
-        startScreen.call(this, false, () => {
-            this.updateGameState({
-                path: ['game'],
-                data: {
-                    bagCount: 0,
-                    levels: {
-                        [opts.level]: {
-                            start: false,
-                        }
-                    },
-                    state: 'default',
+        this.updateGameData({
+            key: 'game',
+            data: {
+                bagCount: 0,
+                levels: {
+                    [opts.level]: {
+                        start: false,
+                    }
                 },
-            });
-
-            startScreen.call(this);
+                state: 'default',
+            },
         });
     };
 
@@ -107,21 +103,24 @@ export default function (props, ref, key, opts = {}) {
     onTimerComplete = function () {
         if (_.get(props, `gameState.data.game.levels.${opts.level}.complete`, false)) return;
 
-        startScreen.call(this, false, () => {
-            this.updateGameState({
-                path: ['game'],
-                data: {
-                    bagCount: 0,
-                    lives: _.get(props, 'gameState.data.game.lives', 1) - 1 || 1,
-                    levels: {
-                        [opts.level]: {
-                            start: false,
-                        }
+        this.updateGameData({
+            key: 'game',
+            data: {
+                screenStart: false,
+                bagCount: 0,
+                lives: _.get(props, 'gameState.data.game.lives', 1) - 1 || 1,
+                levels: {
+                    [opts.level]: {
+                        start: false,
                     }
                 },
-            });
+                state: null,
+            },
+        });
 
-            startScreen.call(this);
+        this.updateScreenData({
+            keys: ['reveal', 'open'],
+            data: 'replay',
         });
     };
 
