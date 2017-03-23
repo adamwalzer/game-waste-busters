@@ -269,7 +269,6 @@ skoash.start(
                     ref="gameEmbedder"
                     controller={_.get(this, `state.data.screens.${this.state.currentScreenIndex}.d-pad`)}
                     src={'../waste-busters-runner/index.html'}
-                    complete={_.get(this, 'state.data.game.levels.1.complete', false)}
                     data={_.get(this, 'state.data.game', {})}
                     state={_.get(this, 'state.data.game.state', '')}
                     gameState={this.state}
