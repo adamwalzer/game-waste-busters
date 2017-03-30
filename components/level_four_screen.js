@@ -18,11 +18,10 @@ export default function (props, ref, key) {
         ),
         completeContent: (
             <p>
-                You're a Recycling Wizard!<br/>
-                Being mindful of how you<br/>
-                handle waste helps<br/>
-                keep the environment<br/>
-                in great shape.
+                You're almost at the finish line!<br/>
+                Keep picking up litter and<br/>
+                tips on how to Reduce,<br/>
+                Reuse, and Recycle!
             </p>
         ),
         fact1Content: (

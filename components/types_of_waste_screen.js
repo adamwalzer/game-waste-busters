@@ -73,7 +73,7 @@ export default function (props, ref, key) {
                                 recycled or composted.<br/>
                                 Soiled tissues, plastic<br/>
                                 diapers, and more are just<br/>
-                                some of the times that<br/>
+                                some of the items that<br/>
                                 might end up in the landfill!
                             </div>
                         </div>
